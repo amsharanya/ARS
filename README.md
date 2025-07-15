@@ -108,3 +108,26 @@ PAYMENT TABLE
 |          4 |          4 | Offline        | 2300.00 | 2025-06-13 09:12:45  |
 |          5 |          5 | Offline        | 1800.00 | 2025-06-04 14:23:34  |
 +------------+------------+----------------+---------+----------------------+
+TRIGGER FOR BOOKING AND CANCELLATION
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `booking_AFTER_INSERT` AFTER INSERT ON `booking` FOR EACH ROW BEGIN
+    IF new.payment_status='paid' then
+            insert into booking_status(booking_id,booking_status) values(new.booking_id,"booked");
+        ELSE
+            insert into booking_status(booking_id,booking_status) values(new.booking_id,"cancelled");
+         END IF;
+END
+> select * from booking_status;
++------------+----------------+
+| booking_id | booking_status |
++------------+----------------+
+|          7 | booked         |
++------------+----------------+
+select * from booking_status;
++------------+----------------+
+| booking_id | booking_status |
++------------+----------------+
+|          7 | booked         |
+|          8 | cancelled      |
++------------+----------------+
+
