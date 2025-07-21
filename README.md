@@ -151,3 +151,19 @@ select * from flight_search;
 |         2 | AIR21         | 2025-07-21 18:54:19 | 2025-07-21 23:30:02 | DEL            | BLR            |             150 |
 +-----------+---------------+---------------------+---------------------+----------------+----------------+-----------------+
 
+BOOKING SUMMARY
+
+ create view  booking_summary as select payment.payment_method,payment.amount,booking.payment_status,flight.flight_number,flight.origin_aircode,flight.destin_aircode,flight.arrival_datetime,flight.departure_datetime from payment join booking on payment.booking_id=booking.booking_id join flight on booking.flight_id=flight.flight_id group by booking.booking_id;
+Query OK, 0 rows affected (0.067 sec)
+
+mysql> select * from booking_summary;
++----------------+---------+----------------+---------------+----------------+----------------+---------------------+---------------------+
+| payment_method | amount  | payment_status | flight_number | origin_aircode | destin_aircode | arrival_datetime    | departure_datetime  |
++----------------+---------+----------------+---------------+----------------+----------------+---------------------+---------------------+
+| Gpay           | 1300.00 | paid           | DEL23         | DEL            | COK            | 2025-07-14 23:45:54 | 2025-07-14 18:54:19 |
+| Phonepe        | 1450.00 | paid           | DEL23         | DEL            | COK            | 2025-07-14 23:45:54 | 2025-07-14 18:54:19 |
+| Gpay           | 1000.00 | paid           | AIR21         | DEL            | BLR            | 2025-07-21 23:30:02 | 2025-07-21 18:54:19 |
+| Offline        | 2300.00 | unpaid         | AIR21         | DEL            | BLR            | 2025-07-21 23:30:02 | 2025-07-21 18:54:19 |
+| Offline        | 1800.00 | paid           | SPI24         | BOM            | COK            | 2025-07-18 14:10:34 | 2025-07-18 12:55:22 |
++----------------+---------+----------------+---------------+----------------+----------------+---------------------+---------------------+
+5 rows in set (0.021 sec)
